@@ -197,6 +197,76 @@ claude
 4. **업무 플로우 예시**: `docs/workflow-examples.md`
 5. **일일 업무 시작**: `/daily-standup` 실행
 
+---
+
+## 다른 프로젝트에 Jira 기능 추가하기
+
+AI-driven-work 프로젝트가 아닌 **다른 프로젝트에서도 Jira 관련 기능을 사용**하고 싶다면, `jira-rules-setup.sh` 스크립트를 사용하세요.
+
+### 사용 방법
+
+```bash
+# AI-driven-work 프로젝트에서 실행
+cd ~/Documents/GitHub/popup/AI-driven-work
+
+# 다른 프로젝트에 Jira 기능 추가
+./scripts/jira-rules-setup.sh <타겟_프로젝트_경로>
+
+# 예시
+./scripts/jira-rules-setup.sh ~/projects/my-web-app
+./scripts/jira-rules-setup.sh ~/work/frontend-project
+```
+
+### Dry-run 모드 (미리보기)
+
+실제 변경 없이 어떤 작업이 수행될지 미리 확인할 수 있습니다:
+
+```bash
+./scripts/jira-rules-setup.sh ~/projects/my-web-app --dry-run
+```
+
+### 스크립트가 수행하는 작업
+
+1. **Slash Commands 복사**
+   - `/daily-standup`, `/weekly-report`, `/assign-me`, `/save-slack-thread`
+   - 타겟 프로젝트의 `.claude/commands/` 디렉토리로 복사
+   - 파일 충돌 시 선택 옵션 제공 (덮어쓰기/건너뛰기/이름변경/차이점 보기)
+
+2. **Jira 지침 복사**
+   - `.claude/instructions/jira-rules.md` 복사
+   - Claude Code가 Jira 작업을 자동으로 처리할 수 있도록 설정
+
+3. **기존 지침과 통합**
+   - 타겟 프로젝트에 다른 instructions 파일이 있다면 자동 감지
+   - 각 파일에 `jira-rules.md` 참조 추가하여 모든 지침이 함께 적용되도록 설정
+
+4. **자동 백업**
+   - 덮어쓰기 전 자동으로 백업 생성 (`.claude/.backup-YYYYMMDD-HHMMSS/`)
+   - 문제 발생 시 복구 가능
+
+### 적용 후 사용
+
+타겟 프로젝트로 이동하여 Claude Code를 실행하면 Jira 기능을 바로 사용할 수 있습니다:
+
+```bash
+# 타겟 프로젝트로 이동
+cd ~/projects/my-web-app
+
+# Claude Code 실행
+claude
+
+# Jira 기능 테스트
+> /daily-standup
+> Jira에서 미할당 이슈 보여줘
+```
+
+### 주의사항
+
+- **MCP Server 설정 필요**: `jira-rules-setup.sh`는 slash commands와 지침만 복사합니다. MCP Server 설정은 `setup.sh`로 미리 완료되어 있어야 합니다.
+- **프로젝트별 독립 실행**: 각 프로젝트에서 Claude Code를 실행하면 해당 프로젝트의 지침이 적용됩니다.
+
+---
+
 ## 기여 방법
 
 POPUP STUDIO 전 직원이 이 리포지토리를 참고하여 업무를 진행합니다.

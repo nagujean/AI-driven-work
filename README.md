@@ -132,14 +132,21 @@ AI-driven-work/
 │   ├── mcp-atlassian-config.json
 │   └── README.md                    # 설정 방법 설명
 └── scripts/
-    └── setup.sh                     # 환경 설정 스크립트
+    ├── setup.sh                     # 환경 설정 스크립트 (macOS/Linux)
+    ├── setup.ps1                    # 환경 설정 스크립트 (Windows)
+    ├── jira-rules-setup.sh          # Jira 기능 추가 스크립트 (macOS/Linux)
+    ├── jira-rules-setup.ps1         # Jira 기능 추가 스크립트 (Windows)
+    ├── github-workflow-setup.sh     # GitHub 워크플로우 추가 스크립트 (macOS/Linux)
+    └── github-workflow-setup.ps1    # GitHub 워크플로우 추가 스크립트 (Windows)
 ```
 
 ## 시작하기
 
 ### 자동 설정 (권장)
 
-가장 빠르고 쉬운 방법은 **setup.sh 스크립트**를 사용하는 것입니다:
+가장 빠르고 쉬운 방법은 자동 설정 스크립트를 사용하는 것입니다.
+
+#### macOS / Linux 사용자
 
 ```bash
 # 1. 리포지토리 클론
@@ -150,7 +157,28 @@ cd AI-driven-work
 ./scripts/setup.sh
 ```
 
-#### setup.sh가 자동으로 처리하는 작업:
+#### Windows 사용자
+
+**PowerShell**을 관리자 권한으로 실행한 후:
+
+```powershell
+# 1. 리포지토리 클론
+git clone https://github.com/popupstudio/AI-driven-work.git
+cd AI-driven-work
+
+# 2. PowerShell 실행 정책 확인 (최초 1회)
+Get-ExecutionPolicy
+
+# 3. 실행 정책이 Restricted라면 변경 (최초 1회)
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+# 4. 자동 설정 스크립트 실행
+.\scripts\setup.ps1
+```
+
+> **참고**: Windows에서는 `.ps1` PowerShell 스크립트를 사용합니다.
+
+#### 자동 설정 스크립트가 처리하는 작업:
 
 1. **환경 확인**
    - Node.js 18+ 설치 확인
@@ -207,9 +235,11 @@ claude
 
 ## 다른 프로젝트에 Jira 기능 추가하기
 
-AI-driven-work 프로젝트가 아닌 **다른 프로젝트에서도 Jira 관련 기능을 사용**하고 싶다면, `jira-rules-setup.sh` 스크립트를 사용하세요.
+AI-driven-work 프로젝트가 아닌 **다른 프로젝트에서도 Jira 관련 기능을 사용**하고 싶다면, 자동 설정 스크립트를 사용하세요.
 
 ### 사용 방법
+
+#### macOS / Linux
 
 ```bash
 # AI-driven-work 프로젝트에서 실행
@@ -223,12 +253,32 @@ cd ~/Documents/GitHub/popup/AI-driven-work
 ./scripts/jira-rules-setup.sh ~/work/frontend-project
 ```
 
+#### Windows
+
+```powershell
+# AI-driven-work 프로젝트에서 실행 (PowerShell)
+cd C:\Users\YourName\Documents\GitHub\popup\AI-driven-work
+
+# 다른 프로젝트에 Jira 기능 추가
+.\scripts\jira-rules-setup.ps1 C:\projects\my-web-app
+
+# 예시
+.\scripts\jira-rules-setup.ps1 C:\projects\my-web-app
+.\scripts\jira-rules-setup.ps1 C:\work\frontend-project
+```
+
 ### Dry-run 모드 (미리보기)
 
 실제 변경 없이 어떤 작업이 수행될지 미리 확인할 수 있습니다:
 
+#### macOS / Linux
 ```bash
 ./scripts/jira-rules-setup.sh ~/projects/my-web-app --dry-run
+```
+
+#### Windows
+```powershell
+.\scripts\jira-rules-setup.ps1 C:\projects\my-web-app -DryRun
 ```
 
 ### 스크립트가 수행하는 작업
@@ -275,9 +325,11 @@ claude
 
 ## 다른 프로젝트에 GitHub 워크플로우 추가하기
 
-다른 프로젝트에서도 **표준화된 Git 브랜치 전략과 PR 워크플로우**를 사용하고 싶다면, `github-workflow-setup.sh` 스크립트를 사용하세요.
+다른 프로젝트에서도 **표준화된 Git 브랜치 전략과 PR 워크플로우**를 사용하고 싶다면, 자동 설정 스크립트를 사용하세요.
 
 ### 사용 방법
+
+#### macOS / Linux
 
 ```bash
 # AI-driven-work 프로젝트에서 실행
@@ -291,12 +343,32 @@ cd ~/Documents/GitHub/popup/AI-driven-work
 ./scripts/github-workflow-setup.sh ~/work/backend-api
 ```
 
+#### Windows
+
+```powershell
+# AI-driven-work 프로젝트에서 실행 (PowerShell)
+cd C:\Users\YourName\Documents\GitHub\popup\AI-driven-work
+
+# 다른 프로젝트에 GitHub 워크플로우 추가
+.\scripts\github-workflow-setup.ps1 C:\projects\my-web-app
+
+# 예시
+.\scripts\github-workflow-setup.ps1 C:\projects\my-web-app
+.\scripts\github-workflow-setup.ps1 C:\work\backend-api
+```
+
 ### Dry-run 모드 (미리보기)
 
 실제 변경 없이 어떤 작업이 수행될지 미리 확인할 수 있습니다:
 
+#### macOS / Linux
 ```bash
 ./scripts/github-workflow-setup.sh ~/projects/my-web-app --dry-run
+```
+
+#### Windows
+```powershell
+.\scripts\github-workflow-setup.ps1 C:\projects\my-web-app -DryRun
 ```
 
 ### 스크립트가 수행하는 작업

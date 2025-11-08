@@ -30,21 +30,21 @@ scripts/
 ```
 
 **작업 내용**:
-- [ ] `setup.ps1` 작성
+- [x] `setup.ps1` 작성
   - Node.js 버전 확인 (Windows 경로 대응)
   - Claude Code 설치 (`npm install -g`)
   - MCP Server 선택 및 설정
   - 환경 변수 설정 (Windows 레지스트리 또는 사용자 프로필)
   - Claude Code CLI 등록
 
-- [ ] `jira-rules-setup.ps1` 작성
+- [x] `jira-rules-setup.ps1` 작성
   - Slash commands 복사 (Windows 경로 구분자 `\` 대응)
   - Jira 지침 복사
   - 기존 instructions 통합
   - 백업 기능
   - Dry-run 모드
 
-- [ ] `github-workflow-setup.ps1` 작성
+- [x] `github-workflow-setup.ps1` 작성
   - GitHub workflow 지침 복사
   - CODEOWNERS 생성
   - Issue 템플릿 생성
@@ -77,7 +77,7 @@ esac
 - [ ] `scripts/setup` (런처)
 - [ ] `scripts/jira-rules-setup` (런처)
 - [ ] `scripts/github-workflow-setup` (런처)
-- [ ] README.md 업데이트 (Windows 사용자 안내)
+- [x] README.md 업데이트 (Windows 사용자 안내)
 
 #### 1.3 Windows 환경 테스트
 

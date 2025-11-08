@@ -476,6 +476,234 @@ claude
 
 ---
 
+## 다른 프로젝트에 GitHub 워크플로우 추가하기
+
+### GitHub 워크플로우란?
+
+**쉽게 말하면**: 여러 명이 함께 코드를 작성할 때 따라야 할 규칙입니다.
+
+- 브랜치 만들기 규칙 (feature/버그명, bugfix/문제명 등)
+- 코드 리뷰 받는 방법
+- 변경사항 머지하는 방법
+- 이슈 템플릿
+
+### 왜 필요한가요?
+
+팀 프로젝트에서 일관된 Git 워크플로우를 사용하면:
+- 혼란 없이 협업 가능
+- 코드 품질 향상 (리뷰 필수)
+- 변경 이력 추적 용이
+- 신입 직원 온보딩 간소화
+
+### 사용 방법
+
+#### 1단계: AI-driven-work로 이동
+
+```bash
+cd ~/Documents/GitHub/popup/AI-driven-work
+```
+
+#### 2단계: 스크립트 실행
+
+```bash
+# 기본 사용법
+./scripts/github-workflow-setup.sh <다른_프로젝트_경로>
+
+# 예시
+./scripts/github-workflow-setup.sh ~/projects/my-web-app
+./scripts/github-workflow-setup.sh ~/work/design-project
+```
+
+#### 3단계: GitHub username 입력
+
+스크립트 실행 중 GitHub username을 물어봅니다:
+
+```
+GitHub Username (예: popup-kay): your-github-id
+```
+
+이 정보는 CODEOWNERS 파일과 Issue 템플릿에 사용됩니다.
+
+#### 4단계: 미리보기 (선택사항)
+
+실제 변경하기 전에 어떤 작업이 수행될지 확인하고 싶다면:
+
+```bash
+./scripts/github-workflow-setup.sh ~/projects/my-web-app --dry-run
+```
+
+### 스크립트가 하는 일
+
+**[1/4] GitHub Workflow 지침 복사**
+- `.claude/instructions/github-workflow.md` 복사
+- 브랜치 전략 (main/develop/feature/bugfix)
+- 머지 전략 (Squash and merge vs Merge commit)
+- PR 생성 및 리뷰 가이드
+- 커밋 메시지 규칙
+
+**[2/4] GitHub 설정 파일 생성**
+
+`.github/CODEOWNERS` 생성:
+```
+# CODEOWNERS
+* @your-github-id
+```
+
+Issue 템플릿 생성:
+- `bug_report.md` - 버그 리포트 템플릿
+- `feature_request.md` - 기능 제안 템플릿
+
+**파일 충돌 시**:
+```
+⚠️  CODEOWNERS 파일이 이미 존재합니다.
+   (o)덮어쓰기 / (s)건너뛰기 / (a)소유자 추가
+   선택:
+```
+
+**[3/4] 기존 지침과 통합**
+- 다른 프로젝트에 이미 있는 instructions 파일 자동 감지
+- 기존 파일에 `github-workflow.md` 참조 추가
+
+예를 들어, `coding-style.md`가 있다면:
+```markdown
+---
+
+> 🔀 GitHub Workflow: This project follows standardized branch and PR workflows.
+> See: `.claude/instructions/github-workflow.md`
+
+---
+
+(기존 코딩 스타일 가이드 내용...)
+```
+
+**[4/4] 자동 백업**
+- 덮어쓰기 전 자동으로 백업 생성
+- 백업 위치: `.claude/.backup-YYYYMMDD-HHMMSS/`
+
+### 적용 후 설정
+
+스크립트 실행이 완료되면, GitHub 저장소에서 추가 설정이 필요합니다:
+
+#### 1. Branch Protection Rules 설정
+
+**GitHub 저장소로 이동**:
+```
+https://github.com/<your-org>/<your-repo>/settings/branches
+```
+
+**main 브랜치 보호**:
+1. "Add rule" 클릭
+2. Branch name pattern: `main`
+3. 설정:
+   - ✅ Require a pull request before merging
+   - ✅ Require approvals: 1
+   - ✅ Require review from Code Owners
+   - ✅ Require conversation resolution before merging
+
+**develop 브랜치 보호**:
+1. "Add rule" 클릭
+2. Branch name pattern: `develop`
+3. 설정:
+   - ✅ Require a pull request before merging
+   - ✅ Require approvals: 1
+   - ✅ Require review from Code Owners
+
+#### 2. 생성된 파일 커밋
+
+```bash
+cd ~/projects/my-web-app
+
+# CODEOWNERS 커밋
+git add .github/CODEOWNERS
+git commit -m "chore: Add CODEOWNERS file"
+
+# Issue 템플릿 커밋
+git add .github/ISSUE_TEMPLATE/
+git commit -m "chore: Add issue templates"
+
+# GitHub Workflow 지침 커밋
+git add .claude/instructions/github-workflow.md
+git commit -m "docs: Add GitHub workflow guidelines"
+
+# 푸시
+git push origin develop
+```
+
+### 적용 후 사용
+
+다른 프로젝트에서 Claude Code를 실행하면 GitHub 워크플로우 지침을 확인할 수 있습니다:
+
+```bash
+# 타겟 프로젝트로 이동
+cd ~/projects/my-web-app
+
+# Claude Code 실행
+claude
+
+# GitHub 워크플로우 확인
+> GitHub 브랜치 전략 알려줘
+> PR 만들 때 주의사항 뭐야?
+> 커밋 메시지 규칙 알려줘
+```
+
+### 실전 예시
+
+**시나리오**: 프론트엔드 프로젝트에 GitHub 워크플로우 적용
+
+```bash
+# 1. AI-driven-work에서 스크립트 실행
+cd ~/Documents/GitHub/popup/AI-driven-work
+./scripts/github-workflow-setup.sh ~/projects/frontend-app
+
+# 출력:
+# ==========================================
+# 🔀 GitHub Workflow Setup
+# ==========================================
+#
+# GitHub Username (예: popup-kay): john-doe
+#
+# [1/4] GitHub Workflow 지침 복사
+#   ✅ github-workflow.md 복사 완료
+#
+# [2/4] GitHub 설정 파일 생성
+#   ✅ CODEOWNERS 생성 완료
+#   ✅ bug_report.md 생성 완료
+#   ✅ feature_request.md 생성 완료
+#
+# [3/4] 기존 Instructions 파일 확인
+#   📄 react-guidelines.md
+#   ✅ react-guidelines.md: github-workflow.md 참조 추가 완료
+#
+# [4/4] 설정 완료!
+
+# 2. 프론트엔드 프로젝트로 이동
+cd ~/projects/frontend-app
+
+# 3. GitHub 설정 파일 커밋
+git add .github/ .claude/
+git commit -m "chore: Add GitHub workflow configuration"
+git push origin develop
+
+# 4. GitHub에서 Branch Protection Rules 설정
+
+# 5. Claude Code로 확인
+claude
+> GitHub 워크플로우 규칙 알려줘
+# → 브랜치 전략, 머지 전략 등 상세 안내!
+```
+
+### 주의사항
+
+**권한 필요**: GitHub 저장소에서 Branch Protection Rules를 설정하려면 관리자 권한이 필요합니다.
+
+**팀 공유**: 생성된 CODEOWNERS와 Issue 템플릿은 팀원들과 공유해야 합니다 (git push).
+
+**프로젝트별 독립**: 각 프로젝트마다 별도의 GitHub 워크플로우 설정을 가질 수 있습니다.
+
+이제 어떤 프로젝트에서든 표준화된 Git 협업이 가능합니다! 🎉
+
+---
+
 ## 유용한 팁
 
 ### 💡 효율적으로 사용하는 법

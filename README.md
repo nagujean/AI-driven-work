@@ -19,7 +19,9 @@ Claude Code를 AI Agent로 활용하여 Jira, Confluence와 연동하고, 전 �
 - **AI Agent**: Claude Code
 - **프로젝트 관리**: Jira
 - **문서화**: Confluence
-- **통합**: mcp-atlassian (Claude Code와 Atlassian 도구 연동)
+- **통합**: MCP (Model Context Protocol) 서버
+  - **mcp-atlassian**: Jira/Confluence 연동
+  - **향후 확장 예정**: Slack, GitHub, Notion 등 추가 MCP 서버 통합 계획
 
 ## 해결하고자 하는 문제
 
@@ -264,6 +266,117 @@ claude
 
 - **MCP Server 설정 필요**: `jira-rules-setup.sh`는 slash commands와 지침만 복사합니다. MCP Server 설정은 `setup.sh`로 미리 완료되어 있어야 합니다.
 - **프로젝트별 독립 실행**: 각 프로젝트에서 Claude Code를 실행하면 해당 프로젝트의 지침이 적용됩니다.
+
+---
+
+## 다른 프로젝트에 GitHub 워크플로우 추가하기
+
+다른 프로젝트에서도 **표준화된 Git 브랜치 전략과 PR 워크플로우**를 사용하고 싶다면, `github-workflow-setup.sh` 스크립트를 사용하세요.
+
+### 사용 방법
+
+```bash
+# AI-driven-work 프로젝트에서 실행
+cd ~/Documents/GitHub/popup/AI-driven-work
+
+# 다른 프로젝트에 GitHub 워크플로우 추가
+./scripts/github-workflow-setup.sh <타겟_프로젝트_경로>
+
+# 예시
+./scripts/github-workflow-setup.sh ~/projects/my-web-app
+./scripts/github-workflow-setup.sh ~/work/backend-api
+```
+
+### Dry-run 모드 (미리보기)
+
+실제 변경 없이 어떤 작업이 수행될지 미리 확인할 수 있습니다:
+
+```bash
+./scripts/github-workflow-setup.sh ~/projects/my-web-app --dry-run
+```
+
+### 스크립트가 수행하는 작업
+
+1. **GitHub Workflow 지침 복사**
+   - `.claude/instructions/github-workflow.md` 복사
+   - 브랜치 전략, 머지 전략, PR 워크플로우 가이드
+
+2. **GitHub 설정 파일 생성**
+   - `.github/CODEOWNERS` - 코드 소유자 자동 지정
+   - `.github/ISSUE_TEMPLATE/bug_report.md` - 버그 리포트 템플릿
+   - `.github/ISSUE_TEMPLATE/feature_request.md` - 기능 제안 템플릿
+
+3. **기존 지침과 통합**
+   - 타겟 프로젝트의 다른 instruction 파일 자동 감지
+   - 각 파일에 `github-workflow.md` 참조 추가
+
+4. **자동 백업**
+   - 덮어쓰기 전 자동으로 백업 생성 (`.claude/.backup-YYYYMMDD-HHMMSS/`)
+
+### 적용 후 설정
+
+스크립트 실행 후 GitHub 저장소에서 Branch Protection Rules를 설정하세요:
+
+1. **GitHub 저장소 설정**: `Settings → Branches`
+2. **main 브랜치 보호**:
+   - PR 필수
+   - 최소 1명 승인 필요
+   - Code Owners 승인 필수
+3. **develop 브랜치 보호**:
+   - PR 필수
+   - 최소 1명 승인 필요
+
+자세한 내용은 생성된 `.claude/instructions/github-workflow.md` 파일을 참고하세요.
+
+---
+
+## MCP 서버 확장 계획
+
+이 프로젝트는 지속적으로 발전하며, 필요에 따라 다양한 MCP 서버를 추가할 예정입니다.
+
+### 현재 통합된 MCP 서버
+
+- **mcp-atlassian**: Jira/Confluence 연동
+
+### 향후 추가 예정 MCP 서버
+
+업무 효율성을 더욱 높이기 위해 다음 MCP 서버 통합을 검토 중입니다:
+
+1. **Slack MCP Server**
+   - Slack 메시지 자동 검색 및 분석
+   - 중요 대화를 Confluence로 자동 마이그레이션
+   - 채널별 업무 현황 모니터링
+
+2. **GitHub MCP Server**
+   - PR 자동 리뷰 및 머지 관리
+   - Issue와 Jira 자동 연동
+   - 커밋 히스토리 분석 및 보고서 생성
+
+3. **Notion MCP Server**
+   - Notion 페이지를 Confluence로 마이그레이션
+   - 데이터베이스 자동 동기화
+   - 정보 통합 및 중복 제거
+
+4. **Google Drive MCP Server**
+   - 문서 검색 및 Confluence 동기화
+   - 스프레드시트 데이터 분석
+   - 파일 권한 관리 자동화
+
+5. **Linear MCP Server**
+   - Linear 이슈와 Jira 동기화
+   - 통합 프로젝트 관리 대시보드
+   - 진행 상황 자동 리포팅
+
+### MCP 서버 추가 시 자동 배포
+
+새로운 MCP 서버가 추가되면:
+- `setup.sh` 스크립트가 자동으로 업데이트됩니다
+- 기존 사용자는 `setup.sh`를 다시 실행하여 새 MCP 서버를 선택적으로 추가할 수 있습니다
+- 각 MCP 서버는 독립적으로 활성화/비활성화 가능합니다
+
+### 제안 및 피드백
+
+업무에 필요한 MCP 서버가 있다면 이슈로 제안해주세요. 팀의 실제 니즈에 맞춰 우선순위를 조정하여 추가할 예정입니다.
 
 ---
 

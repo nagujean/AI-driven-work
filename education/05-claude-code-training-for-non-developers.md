@@ -400,18 +400,18 @@ flowchart LR
 **Jira/Confluence 연동 프로세스 개요**
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph 일일루틴
-        A[Claude Code<br/>실행] --> B[daily-standup]
+        A[Claude Code<br/>실행] --> B[/daily-standup]
         B --> C[이슈 할당<br/>/assign-me]
     end
 
     subgraph 주간루틴
-        D[weekly-report] --> E[Confluence<br/>자동 저장]
+        D[/weekly-report] --> E[Confluence<br/>자동 저장]
     end
 
     subgraph 문서화
-        F[Slack 스레드] --> G[save-slack-thread]
+        F[Slack 스레드] --> G[/save-slack-thread]
         G --> H[Confluence<br/>페이지]
     end
 
